@@ -302,7 +302,8 @@ class ArticleParser:
         print(f"\n📁 Scanning for article files in: {self.articles_dir}")
         
         # Find all text files (they have .docx extension but are text)
-        article_files = list(self.articles_dir.glob('*.docx'))
+        # Search recursively in subdirectories
+        article_files = list(self.articles_dir.glob('**/*.docx'))
         
         # Filter out the metadata Excel file if it's in the same directory
         article_files = [f for f in article_files if not f.name.endswith('.xlsx')]
