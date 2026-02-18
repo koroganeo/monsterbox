@@ -14,9 +14,6 @@ import { translateGenre } from '../../core/utils/genre-translations';
     <section class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
       <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-8">
         <div class="text-center">
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-            Monster Box
-          </h1>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               [routerLink]="['/', lang(), 'articles']"

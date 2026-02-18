@@ -31,7 +31,7 @@
     "noResults": "No matching articles found"
   },
   "footer": {
-    "copyright": "\u00a9 2026 MonsterBox. All rights reserved.",
+    "copyright": "Data source: Monster Box Organization.\n\nThis website is not affiliated with Monster Box.",
     "description": "Bilingual Vietnamese - English article platform"
   }
 }

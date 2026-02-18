@@ -10,20 +10,26 @@ import { translateGenre } from '../../core/utils/genre-translations';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <a [routerLink]="['/', lang(), 'article', article().id]"
-       (mouseenter)="onHover()"
-       class="group block bg-white rounded-xl shadow-sm border border-gray-200
-              hover:shadow-md hover:border-blue-200 transition-all duration-200 h-full">
+    <a
+      [routerLink]="['/', lang(), 'article', article().id]"
+      (mouseenter)="onHover()"
+      class="group block bg-white rounded-xl shadow-sm border border-gray-200
+              hover:shadow-md hover:border-blue-200 transition-all duration-200 h-full"
+    >
       <div class="p-5 sm:p-6 flex flex-col h-full">
         <!-- Meta info -->
         <div class="flex items-center gap-2 mb-3 flex-wrap">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                       bg-blue-100 text-blue-800">
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                       bg-blue-100 text-blue-800"
+          >
             {{ translatedGenre() }}
           </span>
           @if (!article().metadata.difficultyLevel.toLowerCase().includes('không có thông tin')) {
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                  [class]="difficultyClass()">
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+              [class]="difficultyClass()"
+            >
               {{ article().metadata.difficultyLevel }}
             </span>
           }
@@ -33,8 +39,10 @@ import { translateGenre } from '../../core/utils/genre-translations';
         </div>
 
         <!-- Title -->
-        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600
-                   transition-colors mb-2 line-clamp-2">
+        <h3
+          class="text-lg font-semibold text-gray-900 group-hover:text-blue-600
+                   transition-colors mb-2 line-clamp-2"
+        >
           {{ article()[lang()].title }}
         </h3>
 
@@ -52,13 +60,15 @@ import { translateGenre } from '../../core/utils/genre-translations';
               </span>
             }
           </div>
-          <span class="text-blue-600 text-sm font-medium group-hover:underline whitespace-nowrap ml-2">
+          <span
+            class="text-blue-600 text-sm font-medium group-hover:underline whitespace-nowrap ml-2"
+          >
             {{ langService.t('common.readMore') }} →
           </span>
         </div>
       </div>
     </a>
-  `
+  `,
 })
 export class ArticleCardComponent {
   langService = inject(LanguageService);
@@ -88,7 +98,7 @@ export class ArticleCardComponent {
     return date.toLocaleDateString(this.lang() === 'vi' ? 'vi-VN' : 'en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 

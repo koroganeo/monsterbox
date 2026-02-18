@@ -25,20 +25,26 @@ import { LanguageService } from '../../../core/services/language.service';
             </h4>
             <ul class="space-y-2">
               <li>
-                <a [routerLink]="['/', langService.currentLang()]"
-                   class="text-sm hover:text-white transition-colors">
+                <a
+                  [routerLink]="['/', langService.currentLang()]"
+                  class="text-sm hover:text-white transition-colors"
+                >
                   {{ langService.t('nav.home') }}
                 </a>
               </li>
               <li>
-                <a [routerLink]="['/', langService.currentLang(), 'articles']"
-                   class="text-sm hover:text-white transition-colors">
+                <a
+                  [routerLink]="['/', langService.currentLang(), 'articles']"
+                  class="text-sm hover:text-white transition-colors"
+                >
                   {{ langService.t('nav.articles') }}
                 </a>
               </li>
               <li>
-                <a [routerLink]="['/', langService.currentLang(), 'search']"
-                   class="text-sm hover:text-white transition-colors">
+                <a
+                  [routerLink]="['/', langService.currentLang(), 'search']"
+                  class="text-sm hover:text-white transition-colors"
+                >
                   {{ langService.t('nav.search') }}
                 </a>
               </li>
@@ -53,18 +59,24 @@ import { LanguageService } from '../../../core/services/language.service';
             <div class="flex gap-2">
               <button
                 (click)="langService.switchLanguage('vi')"
-                [class]="langService.isVietnamese()
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
-                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer">
+                [class]="
+                  langService.isVietnamese()
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                "
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+              >
                 Tiếng Việt
               </button>
               <button
                 (click)="langService.switchLanguage('en')"
-                [class]="langService.isEnglish()
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
-                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer">
+                [class]="
+                  langService.isEnglish()
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                "
+                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+              >
                 English
               </button>
             </div>
@@ -76,7 +88,7 @@ import { LanguageService } from '../../../core/services/language.service';
         </div>
       </div>
     </footer>
-  `
+  `,
 })
 export class FooterComponent {
   langService = inject(LanguageService);
