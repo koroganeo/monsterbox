@@ -12,7 +12,9 @@
       "Bash(npx ng serve:*)",
       "Bash(curl:*)",
       "Bash(timeout 30 bash:*)",
-      "Bash(netstat -ano)"
+      "Bash(netstat -ano)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

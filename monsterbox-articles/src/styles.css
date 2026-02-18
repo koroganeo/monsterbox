@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Tell Tailwind v4 to scan Angular component templates */
+@source "../src/**/*.ts";
+@source "../src/**/*.html";
+@source "../src/index.html";
+
 /* Custom theme configuration */
 @theme {
   --color-primary: #3B82F6;
