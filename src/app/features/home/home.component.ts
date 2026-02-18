@@ -12,26 +12,32 @@ import { translateGenre } from '../../core/utils/genre-translations';
   template: `
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-8">
         <div class="text-center">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            MonsterBox
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+            Monster Box
           </h1>
-          <p class="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto mb-8">
-            {{ langService.t('footer.description') }}
-          </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a [routerLink]="['/', lang(), 'articles']"
-               class="inline-flex items-center px-6 py-3 rounded-lg bg-white text-blue-700 font-semibold
-                      hover:bg-blue-50 transition-colors shadow-lg">
+            <a
+              [routerLink]="['/', lang(), 'articles']"
+              class="inline-flex items-center px-6 py-3 rounded-lg bg-white text-blue-700 font-semibold
+                      hover:bg-blue-50 transition-colors shadow-lg"
+            >
               {{ langService.t('common.browseAll') }}
               <svg class="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </a>
-            <a [routerLink]="['/', lang(), 'search']"
-               class="inline-flex items-center px-6 py-3 rounded-lg bg-white/10 text-white font-semibold
-                      hover:bg-white/20 transition-colors border border-white/20">
+            <a
+              [routerLink]="['/', lang(), 'search']"
+              class="inline-flex items-center px-6 py-3 rounded-lg bg-white/10 text-white font-semibold
+                      hover:bg-white/20 transition-colors border border-white/20"
+            >
               {{ langService.t('nav.search') }}
             </a>
           </div>
@@ -48,24 +54,35 @@ import { translateGenre } from '../../core/utils/genre-translations';
         <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">
           {{ langService.t('common.featuredArticles') }}
         </h2>
-        <a [routerLink]="['/', lang(), 'articles']"
-           class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1">
+        <a
+          [routerLink]="['/', lang(), 'articles']"
+          class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1"
+        >
           {{ langService.t('common.browseAll') }}
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </a>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (article of featuredArticles(); track article.id) {
-          <a [routerLink]="['/', lang(), 'article', article.id]"
-             class="group block bg-white rounded-xl shadow-sm border border-gray-200
-                    hover:shadow-md hover:border-blue-200 transition-all duration-200">
+          <a
+            [routerLink]="['/', lang(), 'article', article.id]"
+            class="group block bg-white rounded-xl shadow-sm border border-gray-200
+                    hover:shadow-md hover:border-blue-200 transition-all duration-200"
+          >
             <div class="p-6">
               <div class="flex items-center gap-2 mb-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                             bg-blue-100 text-blue-800">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                             bg-blue-100 text-blue-800"
+                >
                   {{ translateGenre(article.metadata.genres, lang()) }}
                 </span>
                 <span class="text-xs text-gray-400">
@@ -73,8 +90,10 @@ import { translateGenre } from '../../core/utils/genre-translations';
                 </span>
               </div>
 
-              <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600
-                         transition-colors mb-2 line-clamp-2">
+              <h3
+                class="text-lg font-semibold text-gray-900 group-hover:text-blue-600
+                         transition-colors mb-2 line-clamp-2"
+              >
                 {{ article[lang()].title }}
               </h3>
 
@@ -106,7 +125,9 @@ import { translateGenre } from '../../core/utils/genre-translations';
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
             <div class="text-3xl font-bold text-blue-600">{{ articleService.totalArticles() }}</div>
-            <div class="text-sm text-gray-500 mt-1">{{ langService.t('common.totalArticles') }}</div>
+            <div class="text-sm text-gray-500 mt-1">
+              {{ langService.t('common.totalArticles') }}
+            </div>
           </div>
           <div>
             <div class="text-3xl font-bold text-green-600">{{ genreCount() }}</div>
@@ -114,16 +135,20 @@ import { translateGenre } from '../../core/utils/genre-translations';
           </div>
           <div>
             <div class="text-3xl font-bold text-amber-600">2</div>
-            <div class="text-sm text-gray-500 mt-1">{{ langService.isVietnamese() ? 'Ngôn ngữ' : 'Languages' }}</div>
+            <div class="text-sm text-gray-500 mt-1">
+              {{ langService.isVietnamese() ? 'Ngôn ngữ' : 'Languages' }}
+            </div>
           </div>
           <div>
             <div class="text-3xl font-bold text-purple-600">100%</div>
-            <div class="text-sm text-gray-500 mt-1">{{ langService.isVietnamese() ? 'Dịch thuật' : 'Translated' }}</div>
+            <div class="text-sm text-gray-500 mt-1">
+              {{ langService.isVietnamese() ? 'Dịch thuật' : 'Translated' }}
+            </div>
           </div>
         </div>
       </div>
     </section>
-  `
+  `,
 })
 export class HomeComponent implements OnInit {
   articleService = inject(ArticleService);
@@ -134,22 +159,21 @@ export class HomeComponent implements OnInit {
 
   lang = this.langService.currentLang;
 
-  featuredArticles = computed(() =>
-    this.articleService.articles().slice(0, 6)
-  );
+  featuredArticles = computed(() => this.articleService.articles().slice(0, 6));
 
-  genreCount = computed(() =>
-    this.articleService.getUniqueGenres()().length
-  );
+  genreCount = computed(() => this.articleService.getUniqueGenres()().length);
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const lang = params.get('lang');
       if (lang) this.langService.setLanguageFromRoute(lang);
     });
 
     this.title.setTitle('MonsterBox - Bilingual Articles');
-    this.meta.updateTag({ name: 'description', content: 'Bilingual Vietnamese-English article platform' });
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Bilingual Vietnamese-English article platform',
+    });
   }
 
   readonly translateGenre = translateGenre;
@@ -159,7 +183,7 @@ export class HomeComponent implements OnInit {
     return date.toLocaleDateString(this.lang() === 'vi' ? 'vi-VN' : 'en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 }
