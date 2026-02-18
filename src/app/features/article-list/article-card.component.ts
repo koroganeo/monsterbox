@@ -20,10 +20,12 @@ import { ArticleService } from '../../core/services/article.service';
                        bg-blue-100 text-blue-800">
             {{ article().metadata.genres }}
           </span>
-          <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                [class]="difficultyClass()">
-            {{ article().metadata.difficultyLevel }}
-          </span>
+          @if (!article().metadata.difficultyLevel.toLowerCase().includes('không có thông tin')) {
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                  [class]="difficultyClass()">
+              {{ article().metadata.difficultyLevel }}
+            </span>
+          }
           <span class="text-xs text-gray-400 ml-auto">
             {{ formatDate(article().metadata.createdAt) }}
           </span>
