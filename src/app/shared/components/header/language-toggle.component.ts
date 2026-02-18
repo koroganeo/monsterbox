@@ -10,12 +10,15 @@ import { LanguageService } from '../../../core/services/language.service';
       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium
              bg-white/10 hover:bg-white/20 text-white transition-all duration-200
              border border-white/20 hover:border-white/40 cursor-pointer"
-      [attr.aria-label]="langService.isVietnamese() ? 'Switch to English' : 'Chuyển sang Tiếng Việt'"
+      [attr.aria-label]="
+        langService.isVietnamese() ? 'Chuyển sang tiếng Anh' : 'Switch to Vietnamese'
+      "
+      [title]="langService.isVietnamese() ? 'Chuyển sang tiếng Anh' : 'Switch to Vietnamese'"
     >
-      <span class="text-xs">{{ langService.isVietnamese() ? '🇬🇧' : '🇻🇳' }}</span>
-      <span>{{ langService.isVietnamese() ? 'EN' : 'VI' }}</span>
+      <span class="text-xs">{{ langService.isVietnamese() ? '🇻🇳' : '🇬🇧' }}</span>
+      <span>{{ langService.isVietnamese() ? 'VI' : 'EN' }}</span>
     </button>
-  `
+  `,
 })
 export class LanguageToggleComponent {
   langService = inject(LanguageService);
