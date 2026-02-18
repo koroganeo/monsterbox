@@ -4,7 +4,15 @@
       "Bash(ls:*)",
       "Bash(python -c:*)",
       "Bash(python:*)",
-      "Bash(PYTHONIOENCODING=utf-8 python jsonConvert.py:*)"
+      "Bash(PYTHONIOENCODING=utf-8 python jsonConvert.py:*)",
+      "Bash(dir:*)",
+      "Bash(npx @angular/cli@latest new:*)",
+      "Bash(npm install:*)",
+      "Bash(npx ng build:*)",
+      "Bash(npx ng serve:*)",
+      "Bash(curl:*)",
+      "Bash(timeout 30 bash:*)",
+      "Bash(netstat -ano)"
     ]
   }
 }
