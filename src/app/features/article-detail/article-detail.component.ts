@@ -9,6 +9,7 @@ import { SafeHtmlPipe } from '../../shared/pipes/safe-html.pipe';
 import { BreadcrumbsComponent, Breadcrumb } from '../../shared/components/breadcrumbs/breadcrumbs.component';
 import { RelatedArticlesComponent } from './related-articles.component';
 import { Article } from '../../core/models/article.model';
+import { translateGenre } from '../../core/utils/genre-translations';
 
 @Component({
   selector: 'app-article-detail',
@@ -79,7 +80,7 @@ import { Article } from '../../core/models/article.model';
 
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                          bg-blue-100 text-blue-800">
-              {{ article()!.metadata.genres }}
+              {{ translateGenre(article()!.metadata.genres, lang()) }}
             </span>
 
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
@@ -90,9 +91,9 @@ import { Article } from '../../core/models/article.model';
         </header>
 
         <!-- Tags -->
-        @if (article()![lang()].tags.length > 0) {
+        @if (article()!.metadata.tags.length > 0) {
           <div class="flex flex-wrap gap-2 mb-8">
-            @for (tag of article()![lang()].tags; track tag) {
+            @for (tag of article()!.metadata.tags; track tag) {
               <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
                 {{ tag }}
               </span>
@@ -206,6 +207,8 @@ export class ArticleDetailComponent implements OnInit {
         }
       });
   }
+
+  readonly translateGenre = translateGenre;
 
   formatDate(dateStr: string): string {
     const date = new Date(dateStr);

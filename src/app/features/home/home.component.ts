@@ -3,6 +3,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ArticleService } from '../../core/services/article.service';
 import { LanguageService } from '../../core/services/language.service';
+import { translateGenre } from '../../core/utils/genre-translations';
 
 @Component({
   selector: 'app-home',
@@ -65,7 +66,7 @@ import { LanguageService } from '../../core/services/language.service';
               <div class="flex items-center gap-2 mb-3">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                              bg-blue-100 text-blue-800">
-                  {{ article.metadata.genres }}
+                  {{ translateGenre(article.metadata.genres, lang()) }}
                 </span>
                 <span class="text-xs text-gray-400">
                   {{ formatDate(article.metadata.createdAt) }}
@@ -83,7 +84,7 @@ import { LanguageService } from '../../core/services/language.service';
 
               <div class="flex items-center justify-between">
                 <div class="flex gap-1.5">
-                  @for (tag of article[lang()].tags.slice(0, 2); track tag) {
+                  @for (tag of article.metadata.tags.slice(0, 2); track tag) {
                     <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
                       {{ tag }}
                     </span>
@@ -150,6 +151,8 @@ export class HomeComponent implements OnInit {
     this.title.setTitle('MonsterBox - Bilingual Articles');
     this.meta.updateTag({ name: 'description', content: 'Bilingual Vietnamese-English article platform' });
   }
+
+  readonly translateGenre = translateGenre;
 
   formatDate(dateStr: string): string {
     const date = new Date(dateStr);

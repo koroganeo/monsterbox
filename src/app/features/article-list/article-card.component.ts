@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { ArticleIndexEntry } from '../../core/models/article.model';
 import { LanguageService } from '../../core/services/language.service';
 import { ArticleService } from '../../core/services/article.service';
+import { translateGenre } from '../../core/utils/genre-translations';
 
 @Component({
   selector: 'app-article-card',
@@ -18,7 +19,7 @@ import { ArticleService } from '../../core/services/article.service';
         <div class="flex items-center gap-2 mb-3 flex-wrap">
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                        bg-blue-100 text-blue-800">
-            {{ article().metadata.genres }}
+            {{ translatedGenre() }}
           </span>
           @if (!article().metadata.difficultyLevel.toLowerCase().includes('không có thông tin')) {
             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
@@ -45,7 +46,7 @@ import { ArticleService } from '../../core/services/article.service';
         <!-- Tags & Read more -->
         <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
           <div class="flex gap-1.5 overflow-hidden">
-            @for (tag of article()[lang()].tags.slice(0, 3); track tag) {
+            @for (tag of article().metadata.tags.slice(0, 3); track tag) {
               <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded whitespace-nowrap">
                 {{ tag }}
               </span>
@@ -66,6 +67,10 @@ export class ArticleCardComponent {
   article = input.required<ArticleIndexEntry>();
 
   lang = this.langService.currentLang;
+
+  translatedGenre(): string {
+    return translateGenre(this.article().metadata.genres, this.lang());
+  }
 
   difficultyClass(): string {
     const level = this.article().metadata.difficultyLevel;
