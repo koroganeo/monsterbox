@@ -29,43 +29,25 @@ export class ArticleService {
   private contentCache = new Map<string, Observable<ArticleContent | null>>();
   private loadedArticles = new Map<string, ArticleContent>();
 
-  getArticle(slug: string) {
+  /**
+   * Returns an Observable for the full article (index metadata + content body).
+   * Safe to call from anywhere — no injection context required.
+   */
+  getArticle$(slug: string): Observable<Article | undefined> {
     const cached = this.loadedArticles.get(slug);
     if (cached) {
-      return signal(this.mergeWithIndex(slug, cached));
+      return of(this.mergeWithIndex(slug, cached));
     }
 
-    const content$ = this.loadArticleContent(slug);
-
-    return toSignal(
-      content$.pipe(
-        map(content => {
-          if (content) {
-            this.loadedArticles.set(slug, content);
-            return this.mergeWithIndex(slug, content);
-          }
-          return this.getIndexEntry(slug);
-        })
-      ),
-      { initialValue: this.getIndexEntry(slug) }
+    return this.loadArticleContent(slug).pipe(
+      map(content => {
+        if (content) {
+          this.loadedArticles.set(slug, content);
+          return this.mergeWithIndex(slug, content);
+        }
+        return this.getIndexEntry(slug);
+      })
     );
-  }
-
-  searchArticles(query: string, lang: 'vi' | 'en' = 'vi') {
-    return computed(() => {
-      const q = query.toLowerCase().trim();
-      if (!q) return [];
-
-      return this.articles().filter(article => {
-        const content = article[lang];
-        return (
-          content.title.toLowerCase().includes(q) ||
-          content.description.toLowerCase().includes(q) ||
-          content.excerpt.toLowerCase().includes(q) ||
-          content.tags.some(tag => tag.toLowerCase().includes(q))
-        );
-      });
-    });
   }
 
   getArticlesByGenre(genre: string) {
@@ -113,6 +95,10 @@ export class ArticleService {
     }
   }
 
+  getIndexEntry(slug: string): Article | undefined {
+    return this.articles().find(a => a.id === slug) as Article | undefined;
+  }
+
   private loadArticleContent(slug: string): Observable<ArticleContent | null> {
     if (!this.contentCache.has(slug)) {
       const content$ = this.http
@@ -121,15 +107,9 @@ export class ArticleService {
           catchError(() => of(null)),
           shareReplay(1)
         );
-
       this.contentCache.set(slug, content$);
     }
-
     return this.contentCache.get(slug)!;
-  }
-
-  private getIndexEntry(slug: string): Article | undefined {
-    return this.articles().find(a => a.id === slug) as Article | undefined;
   }
 
   private mergeWithIndex(slug: string, content: ArticleContent): Article | undefined {

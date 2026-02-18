@@ -1,4 +1,5 @@
-import { Component, inject, computed, OnInit, signal, effect } from '@angular/core';
+import { Component, inject, computed, OnInit, signal, DestroyRef, effect } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ArticleService } from '../../core/services/article.service';
@@ -17,7 +18,20 @@ import { Article } from '../../core/models/article.model';
     <app-breadcrumbs [items]="breadcrumbs()" />
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      @if (article()) {
+      @if (loadError()) {
+        <!-- Error state -->
+        <div class="text-center py-16">
+          <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          </svg>
+          <p class="text-gray-500 text-lg">{{ langService.isVietnamese() ? 'Không tìm thấy bài viết.' : 'Article not found.' }}</p>
+          <a [routerLink]="['/', lang(), 'articles']"
+             class="mt-4 inline-block text-blue-600 hover:underline">
+            ← {{ langService.t('article.backToList') }}
+          </a>
+        </div>
+      } @else if (article()) {
         <!-- Article Header -->
         <header class="mb-8">
           <div class="flex items-center gap-2 mb-4 flex-wrap">
@@ -111,39 +125,35 @@ import { Article } from '../../core/models/article.model';
   `
 })
 export class ArticleDetailComponent implements OnInit {
-  articleService = inject(ArticleService);
+  private articleService = inject(ArticleService);
   langService = inject(LanguageService);
   private route = inject(ActivatedRoute);
   private titleService = inject(Title);
   private metaService = inject(Meta);
+  private destroyRef = inject(DestroyRef);
 
   lang = this.langService.currentLang;
-  private slug = signal('');
-  private articleSignal = signal<ReturnType<ArticleService['getArticle']> | null>(null);
 
-  article = computed<Article | undefined>(() => {
-    const sig = this.articleSignal();
-    return sig ? sig() : undefined;
-  });
+  // Plain signals — updated via direct subscriptions (no injection context issues)
+  article = signal<Article | undefined>(undefined);
+  loadError = signal(false);
 
   articleContent = computed(() => {
     const a = this.article();
     if (!a) return null;
-    const content = a[this.lang()]?.content;
-    return content || null;
+    return a[this.lang()]?.content ?? null;
   });
 
   readingTime = computed(() => {
     const a = this.article();
     if (!a) return 0;
-    const length = a.metadata.length || 0;
-    return Math.max(1, Math.ceil(length / 1500));
+    return Math.max(1, Math.ceil((a.metadata.length || 0) / 1500));
   });
 
   relatedArticles = computed(() => {
-    const s = this.slug();
-    if (!s) return [];
-    return this.articleService.getRelatedArticles(s, 6)();
+    const a = this.article();
+    if (!a) return [];
+    return this.articleService.getRelatedArticles(a.id, 6)();
   });
 
   breadcrumbs = computed<Breadcrumb[]>(() => {
@@ -168,16 +178,32 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const lang = params.get('lang');
-      if (lang) this.langService.setLanguageFromRoute(lang);
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        const lang = params.get('lang');
+        if (lang) this.langService.setLanguageFromRoute(lang);
 
-      const slug = params.get('slug');
-      if (slug) {
-        this.slug.set(slug);
-        this.articleSignal.set(this.articleService.getArticle(slug));
-      }
-    });
+        const slug = params.get('slug');
+        if (slug) {
+          // Reset state when navigating to a new article
+          this.article.set(undefined);
+          this.loadError.set(false);
+
+          this.articleService.getArticle$(slug)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: (art) => {
+                if (art) {
+                  this.article.set(art);
+                } else {
+                  this.loadError.set(true);
+                }
+              },
+              error: () => this.loadError.set(true)
+            });
+        }
+      });
   }
 
   formatDate(dateStr: string): string {
