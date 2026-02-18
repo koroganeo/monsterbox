@@ -16,7 +16,7 @@ import { BreadcrumbsComponent, Breadcrumb } from '../../shared/components/breadc
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Search Header -->
-      <div class="max-w-2xl mx-auto mb-10">
+      <div class="max-w-2xl mx-auto mb-8">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-6">
           {{ langService.t('nav.search') }}
         </h1>
@@ -46,6 +46,55 @@ import { BreadcrumbsComponent, Breadcrumb } from '../../shared/components/breadc
               </svg>
             </button>
           }
+        </div>
+      </div>
+
+      <!-- Filter Sections: Tags & Authors -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <!-- Tags Section -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+            {{ langService.t('article.tags') }}
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            @for (tag of popularTags(); track tag) {
+              <button
+                (click)="selectTag(tag)"
+                [class]="activeTag() === tag
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300'"
+                class="text-xs px-3 py-1.5 rounded-full border transition-colors cursor-pointer font-medium">
+                {{ tag }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Authors Section -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            {{ langService.t('article.author') }}
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            @for (author of allAuthors(); track author) {
+              <button
+                (click)="selectAuthor(author)"
+                [class]="activeAuthor() === author
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300'"
+                class="text-xs px-3 py-1.5 rounded-full border transition-colors cursor-pointer font-medium">
+                {{ author }}
+              </button>
+            }
+          </div>
         </div>
       </div>
 
@@ -112,6 +161,34 @@ export class SearchComponent implements OnInit {
     { label: this.langService.t('nav.search') }
   ]);
 
+  activeTag = signal('');
+  activeAuthor = signal('');
+
+  popularTags = computed(() => {
+    const tagCount = new Map<string, number>();
+    this.articleService.articles().forEach(article => {
+      article.metadata.tags.forEach(tag => {
+        const t = tag.trim();
+        if (t) tagCount.set(t, (tagCount.get(t) ?? 0) + 1);
+      });
+    });
+    return Array.from(tagCount.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 20)
+      .map(([tag]) => tag);
+  });
+
+  allAuthors = computed(() => {
+    const authorSet = new Set<string>();
+    this.articleService.articles().forEach(article => {
+      article.metadata.creators.forEach(creator => {
+        const c = creator.trim();
+        if (c) authorSet.add(c);
+      });
+    });
+    return Array.from(authorSet).sort();
+  });
+
   results = computed(() => {
     const q = this.query().toLowerCase().trim();
     if (!q) return [];
@@ -119,11 +196,14 @@ export class SearchComponent implements OnInit {
 
     return this.articleService.articles().filter(article => {
       const content = article[lang];
+      const isTagMatch = article.metadata.tags.some(tag => tag.toLowerCase().includes(q));
+      const isAuthorMatch = article.metadata.creators.some(c => c.toLowerCase().includes(q));
       return (
         content.title.toLowerCase().includes(q) ||
         content.description.toLowerCase().includes(q) ||
         content.excerpt.toLowerCase().includes(q) ||
-        content.tags.some(tag => tag.toLowerCase().includes(q))
+        isTagMatch ||
+        isAuthorMatch
       );
     });
   });
@@ -153,6 +233,34 @@ export class SearchComponent implements OnInit {
   onQueryChange(value: string): void {
     this.query.set(value);
     this.displayCount.set(12);
+    this.activeTag.set('');
+    this.activeAuthor.set('');
+    this.router.navigate([], {
+      queryParams: value ? { q: value } : {},
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  selectTag(tag: string): void {
+    const isSame = this.activeTag() === tag;
+    this.activeTag.set(isSame ? '' : tag);
+    this.activeAuthor.set('');
+    const value = isSame ? '' : tag;
+    this.query.set(value);
+    this.displayCount.set(12);
+    this.router.navigate([], {
+      queryParams: value ? { q: value } : {},
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  selectAuthor(author: string): void {
+    const isSame = this.activeAuthor() === author;
+    this.activeAuthor.set(isSame ? '' : author);
+    this.activeTag.set('');
+    const value = isSame ? '' : author;
+    this.query.set(value);
+    this.displayCount.set(12);
     this.router.navigate([], {
       queryParams: value ? { q: value } : {},
       queryParamsHandling: 'merge'
@@ -160,7 +268,11 @@ export class SearchComponent implements OnInit {
   }
 
   clearSearch(): void {
-    this.onQueryChange('');
+    this.query.set('');
+    this.displayCount.set(12);
+    this.activeTag.set('');
+    this.activeAuthor.set('');
+    this.router.navigate([], { queryParams: {}, queryParamsHandling: 'merge' });
   }
 
   loadMore(): void {
