@@ -23,7 +23,11 @@ export class ArticleService {
     { initialValue: { meta: { totalArticles: 0 }, articles: [] } as ArticlesIndex }
   );
 
-  readonly articles = computed(() => this.indexData().articles);
+  readonly articles = computed(() =>
+    [...this.indexData().articles].sort((a, b) =>
+      new Date(b.metadata.createdAt).getTime() - new Date(a.metadata.createdAt).getTime()
+    )
+  );
   readonly totalArticles = computed(() => this.indexData().meta.totalArticles);
 
   private contentCache = new Map<string, Observable<ArticleContent | null>>();

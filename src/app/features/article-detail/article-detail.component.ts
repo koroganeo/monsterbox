@@ -189,6 +189,7 @@ export class ArticleDetailComponent implements OnInit {
           // Reset state when navigating to a new article
           this.article.set(undefined);
           this.loadError.set(false);
+          window.scrollTo({ top: 0, behavior: 'instant' });
 
           this.articleService.getArticle$(slug)
             .pipe(takeUntilDestroyed(this.destroyRef))
