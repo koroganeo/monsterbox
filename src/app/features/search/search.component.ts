@@ -254,7 +254,7 @@ export class SearchComponent implements OnInit {
       if (q) this.query.set(q);
     });
 
-    this.titleService.setTitle(`${this.langService.t('nav.search')} | MonsterBox`);
+    this.titleService.setTitle(`${this.langService.t('nav.search')} | Monster Box`);
   }
 
   onQueryChange(value: string): void {

@@ -11,7 +11,7 @@ import { LanguageService } from '../../../core/services/language.service';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Brand -->
-          <h3 class="text-white text-xl font-bold mb-3">MonsterBox</h3>
+          <h3 class="text-white text-xl font-bold mb-3">Monster Box</h3>
 
           <!-- Quick Links -->
           <div>

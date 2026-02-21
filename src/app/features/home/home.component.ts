@@ -166,7 +166,7 @@ export class HomeComponent implements OnInit {
       if (lang) this.langService.setLanguageFromRoute(lang);
     });
 
-    this.title.setTitle('MonsterBox - Bilingual Articles');
+    this.title.setTitle('Monster Box Articles');
     this.meta.updateTag({
       name: 'description',
       content: 'Bilingual Vietnamese-English article platform',
