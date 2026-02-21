@@ -83,10 +83,12 @@ import { translateGenre } from '../../core/utils/genre-translations';
               {{ translateGenre(article()!.metadata.genres, lang()) }}
             </span>
 
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                  [class]="difficultyClass()">
-              {{ article()!.metadata.difficultyLevel }}
-            </span>
+            @if (article()!.metadata.difficultyLevel !== 'Không có thông tin') {
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                    [class]="difficultyClass()">
+                {{ article()!.metadata.difficultyLevel }}
+              </span>
+            }
           </div>
         </header>
 
