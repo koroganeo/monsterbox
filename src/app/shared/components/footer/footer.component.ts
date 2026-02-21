@@ -11,12 +11,7 @@ import { LanguageService } from '../../../core/services/language.service';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Brand -->
-          <div>
-            <h3 class="text-white text-xl font-bold mb-3">MonsterBox</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              {{ langService.t('footer.description') }}
-            </p>
-          </div>
+          <h3 class="text-white text-xl font-bold mb-3">MonsterBox</h3>
 
           <!-- Quick Links -->
           <div>
